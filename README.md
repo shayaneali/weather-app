@@ -16,7 +16,7 @@ https://apiweatherlive.netlify.app/
 - Google Fonts
 
 ## Features
-- Live weather search by city
+- Live weather search by city, with a loading indicator while data is fetched
 - Current conditions, humidity, wind, visibility and pressure
 - Sunrise / sunset times
 - Responsive, glassmorphism UI
