@@ -244,13 +244,21 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     document.getElementById('forecastCard').style.display = 'block';
   }
 
+  function setLoading(on) {
+    document.getElementById('loadingMsg').style.display = on ? 'block' : 'none';
+    const btn = document.getElementById('searchBtn');
+    if (btn) { btn.disabled = on; btn.textContent = on ? 'Loading…' : 'Search'; }
+  }
+
   async function fetchWeather(city) {
     if (!city) return;
     const err = document.getElementById('errorMsg');
     err.style.display = 'none';
+    setLoading(true);
 
     if (API_KEY === 'YOUR_API_KEY_HERE') {
       showDemo(city);
+      setLoading(false);
       return;
     }
 
@@ -269,6 +277,8 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     } catch (e) {
       err.style.display = 'block';
       err.textContent = 'City not found. Please try again.';
+    } finally {
+      setLoading(false);
     }
   }
 
