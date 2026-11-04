@@ -522,3 +522,14 @@
     .weather-icon { font-size: 4rem; }
     body { padding: 1.5rem 0.75rem 3rem; }
   }
+  /* Extreme weather alert banner (hidden unless conditions are extreme) */
+  .alert-banner {
+    background: rgba(255, 193, 7, 0.95);
+    color: #3a2600;
+    border-radius: 12px;
+    padding: 0.7rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+  }
