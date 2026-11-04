@@ -26,6 +26,7 @@ https://apiweatherlive.netlify.app/
 - Temperature trend arrows on each forecast day (↑ rising, ↓ falling, → unchanged vs the previous day's high)
 - Wind speed unit toggle: click the wind stat to switch between km/h and mph, saved in localStorage
 - Geolocation weather lookup: "Use my location" fetches weather for your current coordinates (in demo mode it falls back gracefully to the demo data)
+- Last updated time shown on the weather card, refreshed on each successful search
 
 ## Run Locally
 Open `index.html` in a browser, or serve with any static server (e.g. VS Code Live Server).
