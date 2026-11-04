@@ -453,6 +453,7 @@
   .f-icon { font-size: 1.5rem; margin-bottom: 0.4rem; }
   .f-hi { font-size: 0.95rem; font-weight: 500; color: var(--text-light); }
   .f-lo { font-size: 0.75rem; color: var(--text-muted); }
+  .f-trend { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
 
   /* Skeleton loader */
   .skeleton { display: none; }
