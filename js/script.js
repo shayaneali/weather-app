@@ -535,4 +535,6 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
   // Init
   initParticles();
   renderRecentSearches();
+  // Autofocus the search input on page load (Enter-to-search is handled above).
+  document.getElementById('searchInput').focus();
   fetchWeather('Lahore');
