@@ -262,6 +262,12 @@
 
   .city-meta .dot { opacity: 0.4; }
 
+  .updated-time {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+  }
+
   /* Temp + icon row */
   .main-row {
     display: flex;
