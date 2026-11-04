@@ -224,19 +224,33 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     applyBackground(cond.bg);
   }
 
+  // Clicking a forecast day shows its high/low and condition
+  // in the detail line under the strip.
+  function showForecastDetail(label, hi, lo, condition) {
+    const detail = document.getElementById('forecastDetail');
+    if (!detail) return;
+    detail.textContent = `${label} — High ${hi}°${currentUnit}, Low ${lo}°${currentUnit}, ${condition}`;
+    document.querySelectorAll('.forecast-item').forEach(item => item.classList.remove('selected'));
+    const clicked = [...document.querySelectorAll('.forecast-item')].find(item => item.dataset.day === label);
+    if (clicked) clicked.classList.add('selected');
+  }
+
   function renderForecast() {
     const d = forecastData;
     const offset = weatherData?.timezone || 0;
     const strip = document.getElementById('forecastStrip');
     strip.innerHTML = '';
+    const detail = document.getElementById('forecastDetail');
+    if (detail) detail.textContent = '';
 
     const daily = {};
     d.list.forEach(item => {
       const day = formatDay(item.dt, offset);
-      if (!daily[day]) daily[day] = { highs: [], lows: [], icons: [] };
+      if (!daily[day]) daily[day] = { highs: [], lows: [], icons: [], descs: [] };
       daily[day].highs.push(item.main.temp_max);
       daily[day].lows.push(item.main.temp_min);
       daily[day].icons.push(item.weather[0].icon);
+      daily[day].descs.push(item.weather[0].description);
     });
 
     const days = Object.keys(daily).slice(0, 5);
@@ -246,17 +260,22 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
       const info = daily[day];
       const hi = convertTemp(Math.max(...info.highs), currentUnit);
       const lo = convertTemp(Math.min(...info.lows), currentUnit);
-      const iconCode = info.icons[Math.floor(info.icons.length / 2)];
+      const mid = Math.floor(info.icons.length / 2);
+      const iconCode = info.icons[mid];
       const icon = (CONDITIONS[iconCode] || { icon: '🌡️' }).icon;
+      const label = day === today ? 'Today' : day;
+      const condition = info.descs[mid] || info.descs[0];
 
       const el = document.createElement('div');
       el.className = 'forecast-item' + (day === today ? ' today' : '');
+      el.dataset.day = label;
       el.innerHTML = `
-        <div class="f-day">${day === today ? 'Today' : day}</div>
+        <div class="f-day">${label}</div>
         <div class="f-icon">${icon}</div>
         <div class="f-hi">${hi}°</div>
         <div class="f-lo">${lo}°</div>
       `;
+      el.addEventListener('click', () => showForecastDetail(label, hi, lo, condition));
       strip.appendChild(el);
     });
 
@@ -399,16 +418,22 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     const days = ['Mon','Tue','Wed','Thu','Fri'];
     const strip = document.getElementById('forecastStrip');
     strip.innerHTML = '';
+    const detail = document.getElementById('forecastDetail');
+    if (detail) detail.textContent = '';
     const icons = ['01d','02d','10d','04d','01d'];
+    const demoDescs = { '01d': 'clear sky', '02d': 'partly cloudy', '10d': 'light rain', '04d': 'overcast clouds' };
     days.forEach((day, i) => {
       const hi = d.tempC + Math.round(Math.random() * 6 - 3);
       const lo = hi - Math.round(Math.random() * 8 + 4);
       const hiD = currentUnit === 'C' ? hi : Math.round(hi * 9/5 + 32);
       const loD = currentUnit === 'C' ? lo : Math.round(lo * 9/5 + 32);
       const ic = CONDITIONS[icons[i]] || { icon: '🌡️' };
+      const label = i === 0 ? 'Today' : day;
       const el = document.createElement('div');
       el.className = 'forecast-item' + (i === 0 ? ' today' : '');
-      el.innerHTML = `<div class="f-day">${i===0?'Today':day}</div><div class="f-icon">${ic.icon}</div><div class="f-hi">${hiD}°</div><div class="f-lo">${loD}°</div>`;
+      el.dataset.day = label;
+      el.innerHTML = `<div class="f-day">${label}</div><div class="f-icon">${ic.icon}</div><div class="f-hi">${hiD}°</div><div class="f-lo">${loD}°</div>`;
+      el.addEventListener('click', () => showForecastDetail(label, hiD, loD, demoDescs[icons[i]] || d.desc));
       strip.appendChild(el);
     });
     document.getElementById('forecastCard').style.display = 'block';
