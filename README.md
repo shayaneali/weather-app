@@ -20,6 +20,7 @@ https://apiweatherlive.netlify.app/
 - Current conditions, humidity, wind, visibility and pressure
 - Sunrise / sunset times
 - Responsive, glassmorphism UI
+- Recent searches: the last 5 searched cities, saved locally and shown as clickable chips that re-run the search
 
 ## Run Locally
 Open `index.html` in a browser, or serve with any static server (e.g. VS Code Live Server).
