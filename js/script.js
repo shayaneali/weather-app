@@ -166,6 +166,23 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     if (forecastData) renderForecast();
   }
 
+
+  // Extreme conditions only: heat 40C+, thunderstorm, or heavy snow.
+  // Returns an alert message, or null when conditions are not extreme.
+  function extremeAlert(tempC, weatherId, desc) {
+    if (tempC >= 40) return '⚠️ Extreme heat: ' + Math.round(tempC) + '°C — stay hydrated and avoid prolonged sun exposure.';
+    if (weatherId >= 200 && weatherId <= 232) return '⛈️ Thunderstorm alert: severe weather in this area — stay indoors if possible.';
+    if (weatherId === 602 || weatherId === 622 || (desc || '').toLowerCase().includes('heavy snow')) return '❄️ Heavy snow alert: hazardous winter conditions — avoid unnecessary travel.';
+    return null;
+  }
+
+  function renderAlertBanner(msg) {
+    const banner = document.getElementById('alertBanner');
+    if (!banner) return;
+    if (msg) { banner.textContent = msg; banner.style.display = 'block'; }
+    else { banner.textContent = ''; banner.style.display = 'none'; }
+  }
+
   function renderWeather() {
     const d = weatherData;
     const t = convertTemp(d.main.temp, currentUnit);
@@ -200,6 +217,8 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
 
     document.getElementById('sunrise').textContent = formatTime(d.sys.sunrise, d.timezone);
     document.getElementById('sunset').textContent = formatTime(d.sys.sunset, d.timezone);
+
+    renderAlertBanner(extremeAlert(d.main.temp - 273.15, d.weather[0].id, d.weather[0].description));
 
     document.getElementById('weatherCard').style.display = 'block';
     applyBackground(cond.bg);
@@ -371,6 +390,8 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     document.getElementById('pressDesc').textContent = d.pressure >= 1013 ? 'High pressure' : 'Low pressure';
     document.getElementById('sunrise').textContent = d.sunrise;
     document.getElementById('sunset').textContent = d.sunset;
+
+    renderAlertBanner(extremeAlert(d.tempC, d.icon.startsWith('11') ? 200 : null, d.desc));
 
     document.getElementById('weatherCard').style.display = 'block';
 
