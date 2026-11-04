@@ -368,6 +368,8 @@
 
   .stat-card:hover { background: rgba(255,255,255,0.14); }
 
+  .wind-card { cursor: pointer; }
+
   .stat-label {
     font-size: 0.72rem;
     color: var(--text-muted);
