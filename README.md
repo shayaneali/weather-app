@@ -24,6 +24,7 @@ https://apiweatherlive.netlify.app/
 - Extreme weather alert banner: shown on the weather card only for extreme conditions (heat 40°+, thunderstorms, heavy snow)
 - Click a day in the 5-day forecast strip to see that day's high, low and condition in a detail line under the strip
 - Temperature trend arrows on each forecast day (↑ rising, ↓ falling, → unchanged vs the previous day's high)
+- Wind speed unit toggle: click the wind stat to switch between km/h and mph, saved in localStorage
 
 ## Run Locally
 Open `index.html` in a browser, or serve with any static server (e.g. VS Code Live Server).
