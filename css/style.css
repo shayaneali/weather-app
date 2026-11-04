@@ -435,6 +435,19 @@
 
   .forecast-item:hover { background: rgba(255,255,255,0.15); }
   .forecast-item.today { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.3); }
+  .forecast-item { cursor: pointer; }
+  .forecast-item.selected { background: rgba(255,255,255,0.22); border-color: rgba(255,255,255,0.45); }
+
+  /* Detail line shown under the strip when a forecast day is clicked */
+  .forecast-detail {
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    text-align: center;
+    text-transform: capitalize;
+    min-height: 1.2em;
+  }
+  .forecast-detail:empty { display: none; }
 
   .f-day { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.4rem; font-weight: 500; }
   .f-icon { font-size: 1.5rem; margin-bottom: 0.4rem; }
