@@ -21,6 +21,7 @@ https://apiweatherlive.netlify.app/
 - Sunrise / sunset times
 - Responsive, glassmorphism UI
 - Recent searches: the last 5 searched cities, saved locally and shown as clickable chips that re-run the search
+- Extreme weather alert banner: shown on the weather card only for extreme conditions (heat 40°+, thunderstorms, heavy snow)
 
 ## Run Locally
 Open `index.html` in a browser, or serve with any static server (e.g. VS Code Live Server).
