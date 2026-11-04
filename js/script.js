@@ -250,8 +250,47 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     if (btn) { btn.disabled = on; btn.textContent = on ? 'Loading…' : 'Search'; }
   }
 
+  // Recent searches: last 5 cities, kept in localStorage
+  const RECENT_KEY = 'nimbus_recent_searches';
+  function getRecentSearches() {
+    try {
+      const raw = localStorage.getItem(RECENT_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch { return []; }
+  }
+  function renderRecentSearches() {
+    const wrap = document.getElementById('recentSearches');
+    if (!wrap) return;
+    const recent = getRecentSearches();
+    wrap.innerHTML = '';
+    if (!recent.length) { wrap.style.display = 'none'; return; }
+    wrap.style.display = 'flex';
+    const label = document.createElement('span');
+    label.className = 'recent-label';
+    label.textContent = 'Recent:';
+    wrap.appendChild(label);
+    recent.forEach(city => {
+      const btn = document.createElement('button');
+      btn.className = 'recent-btn';
+      btn.type = 'button';
+      btn.textContent = city;
+      btn.addEventListener('click', () => fetchWeather(city));
+      wrap.appendChild(btn);
+    });
+  }
+  function recordRecentSearch(city) {
+    const clean = city.trim();
+    if (!clean) return;
+    const recent = getRecentSearches().filter(c => c.toLowerCase() !== clean.toLowerCase());
+    recent.unshift(clean);
+    try { localStorage.setItem(RECENT_KEY, JSON.stringify(recent.slice(0, 5))); } catch {}
+    renderRecentSearches();
+  }
+
   async function fetchWeather(city) {
     if (!city) return;
+    recordRecentSearch(city);
     const err = document.getElementById('errorMsg');
     err.style.display = 'none';
     setLoading(true);
@@ -357,4 +396,5 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
 
   // Init
   initParticles();
+  renderRecentSearches();
   fetchWeather('Lahore');
