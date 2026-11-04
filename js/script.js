@@ -5,6 +5,21 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
   let weatherData = null;
   let forecastData = null;
 
+  // Wind speed unit (km/h by default, persisted; toggled by clicking the wind stat)
+  const WIND_UNIT_KEY = 'nimbus_wind_unit';
+  let windUnit = 'kmh';
+  try { if (localStorage.getItem(WIND_UNIT_KEY) === 'mph') windUnit = 'mph'; } catch {}
+  let lastDemoCity = null;
+  function formatWind(kmh) {
+    return windUnit === 'mph' ? (kmh * 0.621371).toFixed(1) + ' mph' : kmh.toFixed(1) + ' km/h';
+  }
+  function toggleWindUnit() {
+    windUnit = windUnit === 'mph' ? 'kmh' : 'mph';
+    try { localStorage.setItem(WIND_UNIT_KEY, windUnit); } catch {}
+    if (weatherData) renderWeather();
+    else if (lastDemoCity) showDemo(lastDemoCity);
+  }
+
   // Weather condition → emoji + bg theme
   const CONDITIONS = {
     '01d': { icon: '☀️', bg: 'clear-day' },
@@ -204,8 +219,8 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     document.getElementById('humidity').textContent = h + '%';
     document.getElementById('humidityDesc').textContent = h < 30 ? 'Very dry' : h < 60 ? 'Comfortable' : h < 80 ? 'Humid' : 'Very humid';
 
-    const ws = (d.wind.speed * 3.6).toFixed(1);
-    document.getElementById('wind').textContent = ws + ' km/h';
+    const ws = d.wind.speed * 3.6;
+    document.getElementById('wind').textContent = formatWind(ws);
     document.getElementById('windDir').textContent = degToDir(d.wind.deg || 0) + ' direction';
 
     const vis = (d.visibility / 1000).toFixed(1);
@@ -385,6 +400,7 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
   };
 
   function showDemo(city) {
+    lastDemoCity = city;
     const key = city.toLowerCase();
     const d = DEMO_CITIES[key] || {
       name: city, country: '??', tempC: 22, feelsC: 21, humidity: 60, wind: 15,
@@ -407,7 +423,7 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
 
     document.getElementById('humidity').textContent = d.humidity + '%';
     document.getElementById('humidityDesc').textContent = d.humidity < 60 ? 'Comfortable' : 'Humid';
-    document.getElementById('wind').textContent = d.wind + ' km/h';
+    document.getElementById('wind').textContent = formatWind(d.wind);
     document.getElementById('windDir').textContent = 'variable';
     document.getElementById('visibility').textContent = (d.vis/1000).toFixed(0) + ' km';
     document.getElementById('visDesc').textContent = d.vis >= 10000 ? 'Clear' : 'Moderate';
@@ -448,6 +464,12 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     document.getElementById('forecastCard').style.display = 'block';
     applyBackground(cond.bg);
   }
+
+  // Clicking the wind stat toggles km/h <-> mph (also keyboard-accessible)
+  document.getElementById('windCard').addEventListener('click', toggleWindUnit);
+  document.getElementById('windCard').addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleWindUnit(); }
+  });
 
   // Init
   initParticles();
