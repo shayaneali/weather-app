@@ -385,6 +385,58 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     if (val) fetchWeather(val);
   }
 
+  // Geolocation lookup: fetch weather by coordinates. In demo mode
+  // (no API key) fall back gracefully to the demo data path.
+  async function fetchWeatherByCoords(lat, lon) {
+    const err = document.getElementById('errorMsg');
+    err.style.display = 'none';
+    setLoading(true);
+
+    if (API_KEY === 'YOUR_API_KEY_HERE') {
+      showDemo('Your location');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const [wRes, fRes] = await Promise.all([
+        fetch(`${BASE}/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`),
+        fetch(`${BASE}/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}`)
+      ]);
+
+      if (!wRes.ok) throw new Error('Location weather not found');
+
+      weatherData = await wRes.json();
+      forecastData = await fRes.json();
+      renderWeather();
+      renderForecast();
+    } catch (e) {
+      err.style.display = 'block';
+      err.textContent = 'Could not load weather for your location. Please try a city search.';
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function useMyLocation() {
+    const err = document.getElementById('errorMsg');
+    if (!navigator.geolocation) {
+      err.style.display = 'block';
+      err.textContent = 'Geolocation is not supported by this browser.';
+      return;
+    }
+    err.style.display = 'none';
+    setLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      pos => fetchWeatherByCoords(pos.coords.latitude, pos.coords.longitude),
+      () => {
+        setLoading(false);
+        err.style.display = 'block';
+        err.textContent = 'Location access denied or unavailable. Please try a city search.';
+      }
+    );
+  }
+
   document.getElementById('searchInput').addEventListener('keydown', e => {
     if (e.key === 'Enter') searchWeather();
   });
