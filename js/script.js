@@ -173,6 +173,13 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     return days[d.getUTCDay()];
   }
 
+  // Time the displayed weather was fetched; updated only on a
+  // successful search (not on °C/°F toggles, which only re-render).
+  function updateLastUpdated() {
+    const el = document.getElementById('updatedTime');
+    if (el) el.textContent = 'Updated ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
   function setUnit(u) {
     currentUnit = u;
     document.getElementById('btnC').classList.toggle('active', u === 'C');
@@ -372,6 +379,7 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
       forecastData = await fRes.json();
       renderWeather();
       renderForecast();
+      updateLastUpdated();
     } catch (e) {
       err.style.display = 'block';
       err.textContent = 'City not found. Please try again.';
@@ -515,6 +523,7 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     });
     document.getElementById('forecastCard').style.display = 'block';
     applyBackground(cond.bg);
+    updateLastUpdated();
   }
 
   // Clicking the wind stat toggles km/h <-> mph (also keyboard-accessible)
