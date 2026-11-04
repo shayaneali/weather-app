@@ -256,6 +256,7 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     const days = Object.keys(daily).slice(0, 5);
     const today = formatDay(Math.floor(Date.now()/1000), offset);
 
+    let prevHi = null;
     days.forEach((day, i) => {
       const info = daily[day];
       const hi = convertTemp(Math.max(...info.highs), currentUnit);
@@ -265,6 +266,10 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
       const icon = (CONDITIONS[iconCode] || { icon: '🌡️' }).icon;
       const label = day === today ? 'Today' : day;
       const condition = info.descs[mid] || info.descs[0];
+      // Trend arrow: high rising/falling vs the previous day (none for day 1).
+      const trend = prevHi === null ? '—' : (hi > prevHi ? '↑' : (hi < prevHi ? '↓' : '→'));
+      const trendLabel = prevHi === null ? 'First forecast day' : (hi > prevHi ? 'High rising vs previous day' : (hi < prevHi ? 'High falling vs previous day' : 'High unchanged vs previous day'));
+      prevHi = hi;
 
       const el = document.createElement('div');
       el.className = 'forecast-item' + (day === today ? ' today' : '');
@@ -274,6 +279,7 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
         <div class="f-icon">${icon}</div>
         <div class="f-hi">${hi}°</div>
         <div class="f-lo">${lo}°</div>
+        <div class="f-trend" title="${trendLabel}">${trend}</div>
       `;
       el.addEventListener('click', () => showForecastDetail(label, hi, lo, condition));
       strip.appendChild(el);
@@ -422,6 +428,7 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     if (detail) detail.textContent = '';
     const icons = ['01d','02d','10d','04d','01d'];
     const demoDescs = { '01d': 'clear sky', '02d': 'partly cloudy', '10d': 'light rain', '04d': 'overcast clouds' };
+    let prevHiD = null;
     days.forEach((day, i) => {
       const hi = d.tempC + Math.round(Math.random() * 6 - 3);
       const lo = hi - Math.round(Math.random() * 8 + 4);
@@ -429,10 +436,12 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
       const loD = currentUnit === 'C' ? lo : Math.round(lo * 9/5 + 32);
       const ic = CONDITIONS[icons[i]] || { icon: '🌡️' };
       const label = i === 0 ? 'Today' : day;
+      const trend = prevHiD === null ? '—' : (hiD > prevHiD ? '↑' : (hiD < prevHiD ? '↓' : '→'));
+      prevHiD = hiD;
       const el = document.createElement('div');
       el.className = 'forecast-item' + (i === 0 ? ' today' : '');
       el.dataset.day = label;
-      el.innerHTML = `<div class="f-day">${label}</div><div class="f-icon">${ic.icon}</div><div class="f-hi">${hiD}°</div><div class="f-lo">${loD}°</div>`;
+      el.innerHTML = `<div class="f-day">${label}</div><div class="f-icon">${ic.icon}</div><div class="f-hi">${hiD}°</div><div class="f-lo">${loD}°</div><div class="f-trend">${trend}</div>`;
       el.addEventListener('click', () => showForecastDetail(label, hiD, loD, demoDescs[icons[i]] || d.desc));
       strip.appendChild(el);
     });
