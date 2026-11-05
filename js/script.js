@@ -205,6 +205,14 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     else { banner.textContent = ''; banner.style.display = 'none'; }
   }
 
+  // One-line weather summary: condition, feels-like temperature and
+  // humidity, shown under the weather description and re-rendered
+  // with every weather update.
+  function weatherSummary(desc, feels, humidity) {
+    const cap = desc ? desc.charAt(0).toUpperCase() + desc.slice(1) : '—';
+    return `${cap} — feels like ${feels}°${currentUnit} with ${humidity}% humidity.`;
+  }
+
   function renderWeather() {
     const d = weatherData;
     const t = convertTemp(d.main.temp, currentUnit);
@@ -224,6 +232,8 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     // Stats
     const h = d.main.humidity;
     document.getElementById('humidity').textContent = h + '%';
+    const summaryEl = document.getElementById('weatherSummary');
+    if (summaryEl) summaryEl.textContent = weatherSummary(d.weather[0].description, fl, h);
     document.getElementById('humidityDesc').textContent = h < 30 ? 'Very dry' : h < 60 ? 'Comfortable' : h < 80 ? 'Humid' : 'Very humid';
 
     const ws = d.wind.speed * 3.6;
@@ -480,6 +490,8 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     document.getElementById('feelsVal').textContent = fl + '°' + currentUnit;
     document.getElementById('weatherIcon').textContent = cond.icon;
     document.getElementById('weatherDesc').textContent = d.desc;
+    const summaryEl = document.getElementById('weatherSummary');
+    if (summaryEl) summaryEl.textContent = weatherSummary(d.desc, fl, d.humidity);
 
     document.getElementById('humidity').textContent = d.humidity + '%';
     document.getElementById('humidityDesc').textContent = d.humidity < 60 ? 'Comfortable' : 'Humid';
