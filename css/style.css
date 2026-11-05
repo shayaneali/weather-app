@@ -319,6 +319,14 @@
     text-transform: capitalize;
   }
 
+  .weather-summary {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    text-align: center;
+    margin-top: 0.35rem;
+    opacity: 0.9;
+  }
+
   .feels-like {
     font-size: 0.85rem;
     color: var(--text-muted);
