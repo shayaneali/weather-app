@@ -29,6 +29,7 @@ https://apiweatherlive.netlify.app/
 - Wind speed unit toggle: click the wind stat to switch between km/h and mph, saved in localStorage
 - Geolocation weather lookup: "Use my location" fetches weather for your current coordinates (in demo mode it falls back gracefully to the demo data)
 - Last updated time shown on the weather card, refreshed on each successful search
+- Last viewed city: the last successfully loaded city is saved locally and reloaded automatically when the page opens (Lahore on first visit)
 
 ## Run Locally
 Open `index.html` in a browser, or serve with any static server (e.g. VS Code Live Server).
