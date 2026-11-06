@@ -213,6 +213,41 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     return `${cap} — feels like ${feels}°${currentUnit} with ${humidity}% humidity.`;
   }
 
+  // Copy a one-line weather summary to the clipboard, with brief
+  // "Copied" feedback on the button. Falls back to a hidden textarea
+  // when the Clipboard API is unavailable (e.g. non-secure context).
+  function copyWeatherSummary() {
+    const btn = document.getElementById('copySummaryBtn');
+    const summaryEl = document.getElementById('weatherSummary');
+    const city = document.getElementById('cityName').textContent;
+    const summary = summaryEl ? summaryEl.textContent.trim() : '';
+    if (!summary || summary === '—') return;
+    const text = city && city !== '—' ? city + ': ' + summary : summary;
+    const showCopied = () => {
+      if (!btn) return;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copied';
+      setTimeout(() => { btn.textContent = original; }, 2000);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(showCopied).catch(() => fallbackCopy(text, showCopied));
+    } else {
+      fallbackCopy(text, showCopied);
+    }
+  }
+
+  function fallbackCopy(text, done) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch {}
+    document.body.removeChild(ta);
+    if (done) done();
+  }
+
   function renderWeather() {
     const d = weatherData;
     const t = convertTemp(d.main.temp, currentUnit);
