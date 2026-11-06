@@ -358,6 +358,26 @@
     color: var(--text-light);
   }
 
+  /* Copy summary button */
+  .copy-summary-btn {
+    background: none;
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    color: var(--text-muted);
+    padding: 0.25rem 0.75rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 1.5rem;
+  }
+
+  .copy-summary-btn:hover {
+    background: rgba(255,255,255,0.2);
+    border-color: rgba(255,255,255,0.4);
+    color: var(--text-light);
+  }
+
   /* Divider */
   .divider {
     height: 1px;
