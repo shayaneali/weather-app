@@ -361,6 +361,17 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     if (btn) { btn.disabled = on; btn.textContent = on ? 'Loading…' : 'Search'; }
   }
 
+  // Last viewed city: saved on each successful load and auto-loaded on page start.
+  const LAST_CITY_KEY = 'nimbus_last_city';
+  function getLastCity() {
+    try { return localStorage.getItem(LAST_CITY_KEY) || ''; } catch { return ''; }
+  }
+  function saveLastCity(city) {
+    const clean = (city || '').trim();
+    if (!clean) return;
+    try { localStorage.setItem(LAST_CITY_KEY, clean); } catch {}
+  }
+
   // Recent searches: last 5 cities, kept in localStorage
   const RECENT_KEY = 'nimbus_recent_searches';
   function getRecentSearches() {
@@ -408,6 +419,7 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
 
     if (API_KEY === 'YOUR_API_KEY_HERE') {
       showDemo(city);
+      saveLastCity(city);
       setLoading(false);
       return;
     }
@@ -424,6 +436,7 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
       forecastData = await fRes.json();
       renderWeather();
       renderForecast();
+      saveLastCity(city);
       updateLastUpdated();
     } catch (e) {
       err.style.display = 'block';
@@ -584,4 +597,5 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
   renderRecentSearches();
   // Autofocus the search input on page load (Enter-to-search is handled above).
   document.getElementById('searchInput').focus();
-  fetchWeather('Lahore');
+  // Reopen the last successfully viewed city; Lahore on first visit.
+  fetchWeather(getLastCity() || 'Lahore');
