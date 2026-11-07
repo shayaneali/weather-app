@@ -22,7 +22,7 @@ https://apiweatherlive.netlify.app/
 - Copy weather summary button on the weather card: copies a one-line summary (city, condition, feels-like temperature and humidity) to the clipboard, with brief "Copied" feedback
 - Sunrise / sunset times
 - Responsive, glassmorphism UI
-- Recent searches: the last 5 searched cities, saved locally and shown as clickable chips that re-run the search
+- Recent searches: the last 5 searched cities, saved locally and shown as clickable chips that re-run the search, with a small Clear button that empties the stored list and hides the chips
 - Extreme weather alert banner: shown on the weather card only for extreme conditions (heat 40°+, thunderstorms, heavy snow)
 - Click a day in the 5-day forecast strip to see that day's high, low and condition in a detail line under the strip
 - Temperature trend arrows on each forecast day (↑ rising, ↓ falling, → unchanged vs the previous day's high)
