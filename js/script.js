@@ -400,6 +400,13 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
       btn.addEventListener('click', () => fetchWeather(city));
       wrap.appendChild(btn);
     });
+    const clearBtn = document.createElement('button');
+    clearBtn.className = 'recent-clear';
+    clearBtn.type = 'button';
+    clearBtn.textContent = '✕ Clear';
+    clearBtn.setAttribute('aria-label', 'Clear recent searches');
+    clearBtn.addEventListener('click', clearRecentSearches);
+    wrap.appendChild(clearBtn);
   }
   function recordRecentSearch(city) {
     const clean = city.trim();
@@ -407,6 +414,10 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     const recent = getRecentSearches().filter(c => c.toLowerCase() !== clean.toLowerCase());
     recent.unshift(clean);
     try { localStorage.setItem(RECENT_KEY, JSON.stringify(recent.slice(0, 5))); } catch {}
+    renderRecentSearches();
+  }
+  function clearRecentSearches() {
+    try { localStorage.removeItem(RECENT_KEY); } catch {}
     renderRecentSearches();
   }
 
