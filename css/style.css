@@ -555,6 +555,21 @@
 
   .recent-btn:hover { background: var(--glass-hover); transform: translateY(-1px); }
   .recent-btn:active { transform: scale(0.96); }
+
+  .recent-clear {
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    color: var(--text-muted);
+    padding: 0.4rem 0.9rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .recent-clear:hover { background: var(--glass-hover); color: var(--text-light); }
+  .recent-clear:active { transform: scale(0.96); }
   .quick-btn:active { transform: scale(0.96); }
 
   /* Footer */
