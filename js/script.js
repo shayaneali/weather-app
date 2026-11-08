@@ -186,6 +186,7 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     document.getElementById('btnF').classList.toggle('active', u === 'F');
     if (weatherData) renderWeather();
     if (forecastData) renderForecast();
+    if (forecastData) renderHourly();
   }
 
 
@@ -353,6 +354,37 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     });
 
     document.getElementById('forecastCard').style.display = 'block';
+    renderHourly();
+  }
+
+  // Hourly forecast strip: the next hours' forecast (time, icon,
+  // temperature) under the current weather card. The forecast API
+  // returns 3-hour steps, so the strip shows the next 8 slots.
+  function renderHourly() {
+    const card = document.getElementById('hourlyCard');
+    const strip = document.getElementById('hourlyStrip');
+    if (!card || !strip) return;
+    if (!forecastData || !forecastData.list || !forecastData.list.length) {
+      card.style.display = 'none';
+      strip.innerHTML = '';
+      return;
+    }
+    const offset = weatherData?.timezone || 0;
+    const now = Math.floor(Date.now() / 1000);
+    const upcoming = forecastData.list.filter(item => item.dt > now).slice(0, 8);
+    strip.innerHTML = '';
+    upcoming.forEach(item => {
+      const icon = (CONDITIONS[item.weather[0].icon] || { icon: '🌡️' }).icon;
+      const el = document.createElement('div');
+      el.className = 'hourly-item';
+      el.innerHTML = `
+        <div class="h-time">${formatTime(item.dt, offset)}</div>
+        <div class="h-icon">${icon}</div>
+        <div class="h-temp">${convertTemp(item.main.temp, currentUnit)}°</div>
+      `;
+      strip.appendChild(el);
+    });
+    card.style.display = upcoming.length ? 'block' : 'none';
   }
 
   function setLoading(on) {
@@ -593,6 +625,22 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
       strip.appendChild(el);
     });
     document.getElementById('forecastCard').style.display = 'block';
+    // Demo hourly strip: next 8 slots, 3 hours apart, from the demo temperature.
+    const hourlyStrip = document.getElementById('hourlyStrip');
+    const hourlyCard = document.getElementById('hourlyCard');
+    if (hourlyStrip && hourlyCard) {
+      hourlyStrip.innerHTML = '';
+      for (let i = 0; i < 8; i++) {
+        const hour = new Date(Date.now() + (i + 1) * 3 * 3600 * 1000);
+        const tD = currentUnit === 'C' ? d.tempC : Math.round(d.tempC * 9/5 + 32);
+        const ic = CONDITIONS[icons[i % icons.length]] || { icon: '🌡️' };
+        const el = document.createElement('div');
+        el.className = 'hourly-item';
+        el.innerHTML = `<div class="h-time">${hour.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div><div class="h-icon">${ic.icon}</div><div class="h-temp">${tD}°</div>`;
+        hourlyStrip.appendChild(el);
+      }
+      hourlyCard.style.display = 'block';
+    }
     applyBackground(cond.bg);
     updateLastUpdated();
   }
