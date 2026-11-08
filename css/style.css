@@ -491,6 +491,42 @@
   .f-lo { font-size: 0.75rem; color: var(--text-muted); }
   .f-trend { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
 
+  /* Hourly forecast strip (under the current weather card) */
+  .hourly-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 1.25rem;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    animation: cardIn 0.5s 0.1s ease both;
+    margin-bottom: 1rem;
+  }
+
+  .hourly-strip {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+    scrollbar-width: none;
+  }
+
+  .hourly-strip::-webkit-scrollbar { display: none; }
+
+  .hourly-item {
+    flex: 0 0 auto;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    padding: 0.75rem 0.9rem;
+    text-align: center;
+    min-width: 64px;
+  }
+
+  .h-time { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.4rem; font-weight: 500; }
+  .h-icon { font-size: 1.5rem; margin-bottom: 0.4rem; }
+  .h-temp { font-size: 0.95rem; font-weight: 500; color: var(--text-light); }
+
   /* Skeleton loader */
   .skeleton { display: none; }
   .skel-line {
