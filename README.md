@@ -25,6 +25,7 @@ https://apiweatherlive.netlify.app/
 - Recent searches: the last 5 searched cities, saved locally and shown as clickable chips that re-run the search, with a small Clear button that empties the stored list and hides the chips
 - Extreme weather alert banner: shown on the weather card only for extreme conditions (heat 40°+, thunderstorms, heavy snow)
 - Click a day in the 5-day forecast strip to see that day's high, low and condition in a detail line under the strip
+- Hourly forecast strip under the current weather card: the next hours' time, icon and temperature
 - Temperature trend arrows on each forecast day (↑ rising, ↓ falling, → unchanged vs the previous day's high)
 - Wind speed unit toggle: click the wind stat to switch between km/h and mph, saved in localStorage
 - Geolocation weather lookup: "Use my location" fetches weather for your current coordinates (in demo mode it falls back gracefully to the demo data)
