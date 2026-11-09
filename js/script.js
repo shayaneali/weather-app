@@ -550,6 +550,16 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     if (e.key === 'Enter') searchWeather();
   });
 
+  // "/" shortcut: pressing slash anywhere focuses the city search box.
+  // Ignored while typing in an editable field, so "/" can still be typed there.
+  document.addEventListener('keydown', e => {
+    if (e.key !== '/') return;
+    const t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
+    e.preventDefault();
+    document.getElementById('searchInput').focus();
+  });
+
   // Demo mode with mock data
   const DEMO_CITIES = {
     lahore: { name: 'Lahore', country: 'PK', tempC: 32, feelsC: 36, humidity: 58, wind: 14, pressure: 1005, vis: 8000, sunrise: '06:15', sunset: '18:42', desc: 'haze', icon: '50d', timezone: 18000 },
