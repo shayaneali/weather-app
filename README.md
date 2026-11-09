@@ -17,6 +17,7 @@ https://apiweatherlive.netlify.app/
 
 ## Features
 - Live weather search by city, with a loading indicator while data is fetched; press Enter to search, and the search input is focused on page load
+- Press "/" anywhere on the page to focus the city search box
 - Current conditions, humidity, wind, visibility and pressure
 - One-line weather summary under the description (condition, feels-like temperature and humidity), updated with every render
 - Copy weather summary button on the weather card: copies a one-line summary (city, condition, feels-like temperature and humidity) to the clipboard, with brief "Copied" feedback
