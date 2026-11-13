@@ -289,6 +289,7 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     renderAlertBanner(extremeAlert(d.main.temp - 273.15, d.weather[0].id, d.weather[0].description));
 
     document.getElementById('weatherCard').style.display = 'block';
+    updateFavButton();
     applyBackground(cond.bg);
   }
 
@@ -453,6 +454,78 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     renderRecentSearches();
   }
 
+  // Favourite cities: starred cities saved in localStorage and shown
+  // as quick-access chips next to recent searches. Clicking a chip
+  // loads that city; each chip has a remove (✕) button, and the star
+  // button on the weather card toggles the current city.
+  const FAVOURITES_KEY = 'nimbus_favourites';
+  function getFavourites() {
+    try {
+      const raw = localStorage.getItem(FAVOURITES_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch { return []; }
+  }
+  function isFavourite(city) {
+    return getFavourites().some(c => c.toLowerCase() === city.toLowerCase());
+  }
+  function renderFavourites() {
+    const wrap = document.getElementById('favourites');
+    if (!wrap) return;
+    const favs = getFavourites();
+    wrap.innerHTML = '';
+    if (!favs.length) { wrap.style.display = 'none'; updateFavButton(); return; }
+    wrap.style.display = 'flex';
+    const label = document.createElement('span');
+    label.className = 'recent-label';
+    label.textContent = 'Favourites:';
+    wrap.appendChild(label);
+    favs.forEach(city => {
+      const chip = document.createElement('span');
+      chip.className = 'fav-chip';
+      const btn = document.createElement('button');
+      btn.className = 'fav-chip-btn';
+      btn.type = 'button';
+      btn.textContent = city;
+      btn.addEventListener('click', () => fetchWeather(city));
+      const remove = document.createElement('button');
+      remove.className = 'fav-chip-remove';
+      remove.type = 'button';
+      remove.textContent = '✕';
+      remove.setAttribute('aria-label', 'Remove ' + city + ' from favourites');
+      remove.addEventListener('click', e => { e.stopPropagation(); removeFavourite(city); });
+      chip.appendChild(btn);
+      chip.appendChild(remove);
+      wrap.appendChild(chip);
+    });
+    updateFavButton();
+  }
+  function saveFavourites(favs) {
+    try { localStorage.setItem(FAVOURITES_KEY, JSON.stringify(favs)); } catch {}
+    renderFavourites();
+  }
+  function toggleFavourite() {
+    const city = document.getElementById('cityName').textContent.trim();
+    if (!city || city === '—') return;
+    const favs = getFavourites();
+    const idx = favs.findIndex(c => c.toLowerCase() === city.toLowerCase());
+    if (idx >= 0) favs.splice(idx, 1);
+    else favs.push(city);
+    saveFavourites(favs);
+  }
+  function removeFavourite(city) {
+    saveFavourites(getFavourites().filter(c => c.toLowerCase() !== city.toLowerCase()));
+  }
+  function updateFavButton() {
+    const btn = document.getElementById('favBtn');
+    if (!btn) return;
+    const city = document.getElementById('cityName').textContent.trim();
+    const fav = city && city !== '—' && isFavourite(city);
+    btn.textContent = fav ? '★ Favourited' : '☆ Favourite';
+    btn.classList.toggle('active', fav);
+    btn.setAttribute('aria-pressed', fav ? 'true' : 'false');
+  }
+
   async function fetchWeather(city) {
     if (!city) return;
     recordRecentSearch(city);
@@ -608,6 +681,7 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     renderAlertBanner(extremeAlert(d.tempC, d.icon.startsWith('11') ? 200 : null, d.desc));
 
     document.getElementById('weatherCard').style.display = 'block';
+    updateFavButton();
 
     // Demo forecast
     const days = ['Mon','Tue','Wed','Thu','Fri'];
@@ -664,6 +738,7 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
   // Init
   initParticles();
   renderRecentSearches();
+  renderFavourites();
   // Autofocus the search input on page load (Enter-to-search is handled above).
   document.getElementById('searchInput').focus();
   // Reopen the last successfully viewed city; Lahore on first visit.
