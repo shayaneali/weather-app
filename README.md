@@ -24,6 +24,7 @@ https://apiweatherlive.netlify.app/
 - Sunrise / sunset times
 - Responsive, glassmorphism UI
 - Recent searches: the last 5 searched cities, saved locally and shown as clickable chips that re-run the search, with a small Clear button that empties the stored list and hides the chips
+- Favourite cities: star button on the weather card saves the current city to a favourites list (saved in localStorage), shown as quick-access chips next to recent searches; clicking a chip loads that city, and each chip has a remove (✕) button
 - Extreme weather alert banner: shown on the weather card only for extreme conditions (heat 40°+, thunderstorms, heavy snow)
 - Click a day in the 5-day forecast strip to see that day's high, low and condition in a detail line under the strip
 - Hourly forecast strip under the current weather card: the next hours' time, icon and temperature
