@@ -404,6 +404,12 @@
 
   .wind-card { cursor: pointer; }
 
+  /* Compass arrow next to the wind speed: rotates to the wind direction */
+  .wind-arrow {
+    display: inline-block;
+    transition: transform 0.4s ease;
+  }
+
   .stat-label {
     font-size: 0.72rem;
     color: var(--text-muted);
