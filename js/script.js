@@ -275,6 +275,13 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     const ws = d.wind.speed * 3.6;
     document.getElementById('wind').textContent = formatWind(ws);
     document.getElementById('windDir').textContent = degToDir(d.wind.deg || 0) + ' direction';
+    // Compass arrow next to the wind speed: ➤ points east at 0deg, so
+    // rotate by (deg - 90) to point in the direction the wind comes from.
+    const windArrow = document.getElementById('windArrow');
+    if (windArrow) {
+      windArrow.style.visibility = 'visible';
+      windArrow.style.transform = 'rotate(' + ((d.wind.deg || 0) - 90) + 'deg)';
+    }
 
     const vis = (d.visibility / 1000).toFixed(1);
     document.getElementById('visibility').textContent = vis + ' km';
@@ -671,6 +678,9 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     document.getElementById('humidityDesc').textContent = d.humidity < 60 ? 'Comfortable' : 'Humid';
     document.getElementById('wind').textContent = formatWind(d.wind);
     document.getElementById('windDir').textContent = 'variable';
+    // Demo data has no wind direction, so hide the compass arrow.
+    const demoArrow = document.getElementById('windArrow');
+    if (demoArrow) demoArrow.style.visibility = 'hidden';
     document.getElementById('visibility').textContent = (d.vis/1000).toFixed(0) + ' km';
     document.getElementById('visDesc').textContent = d.vis >= 10000 ? 'Clear' : 'Moderate';
     document.getElementById('pressure').textContent = d.pressure + ' hPa';
