@@ -30,6 +30,7 @@ https://apiweatherlive.netlify.app/
 - Hourly forecast strip under the current weather card: the next hours' time, icon and temperature
 - Temperature trend arrows on each forecast day (↑ rising, ↓ falling, → unchanged vs the previous day's high)
 - Wind speed unit toggle: click the wind stat to switch between km/h and mph, saved in localStorage
+- Wind direction: compass label (N, NE, E, …) with a small arrow next to the wind speed that rotates to point in the wind's direction, updating with each render and unit toggle
 - Geolocation weather lookup: "Use my location" fetches weather for your current coordinates (in demo mode it falls back gracefully to the demo data)
 - Last updated time shown on the weather card, refreshed on each successful search
 - Last viewed city: the last successfully loaded city is saved locally and reloaded automatically when the page opens (Lahore on first visit)
