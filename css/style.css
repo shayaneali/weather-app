@@ -358,8 +358,8 @@
     color: var(--text-light);
   }
 
-  /* Copy summary button */
-  .copy-summary-btn {
+  /* Copy summary / share buttons */
+  .copy-summary-btn, .share-btn {
     background: none;
     border: 1px solid var(--glass-border);
     border-radius: 8px;
@@ -372,7 +372,9 @@
     margin-bottom: 1.5rem;
   }
 
-  .copy-summary-btn:hover {
+  .share-btn { margin-left: 0.5rem; }
+
+  .copy-summary-btn:hover, .share-btn:hover {
     background: rgba(255,255,255,0.2);
     border-color: rgba(255,255,255,0.4);
     color: var(--text-light);
