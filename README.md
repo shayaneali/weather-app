@@ -21,6 +21,7 @@ https://apiweatherlive.netlify.app/
 - Current conditions, humidity, wind, visibility and pressure
 - One-line weather summary under the description (condition, feels-like temperature and humidity), updated with every render
 - Copy weather summary button on the weather card: copies a one-line summary (city, condition, feels-like temperature and humidity) to the clipboard, with brief "Copied" feedback
+- Share weather button on the weather card: shares the current city's summary via the Web Share API when available, otherwise copies the summary text to the clipboard with brief "Copied" feedback
 - Sunrise / sunset times
 - Responsive, glassmorphism UI
 - Recent searches: the last 5 searched cities, saved locally and shown as clickable chips that re-run the search, with a small Clear button that empties the stored list and hides the chips
