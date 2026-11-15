@@ -249,6 +249,40 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     if (done) done();
   }
 
+  // Share the current weather: uses the Web Share API when available,
+  // otherwise copies the same shareable summary text to the clipboard
+  // with brief "Copied" feedback on the button.
+  function shareWeather() {
+    const btn = document.getElementById('shareBtn');
+    const summaryEl = document.getElementById('weatherSummary');
+    const city = document.getElementById('cityName').textContent;
+    const summary = summaryEl ? summaryEl.textContent.trim() : '';
+    if (!summary || summary === '—') return;
+    const text = city && city !== '—' ? city + ': ' + summary : summary;
+    const showCopied = () => {
+      if (!btn) return;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copied';
+      setTimeout(() => { btn.textContent = original; }, 2000);
+    };
+    const copyFallback = () => {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(showCopied).catch(() => fallbackCopy(text, showCopied));
+      } else {
+        fallbackCopy(text, showCopied);
+      }
+    };
+    if (navigator.share) {
+      navigator.share({ title: 'Nimbus Weather', text }).catch((err) => {
+        // Cancelling the share sheet is not an error; anything else
+        // falls back to copying the summary text instead.
+        if (err && err.name !== 'AbortError') copyFallback();
+      });
+    } else {
+      copyFallback();
+    }
+  }
+
   function renderWeather() {
     const d = weatherData;
     const t = convertTemp(d.main.temp, currentUnit);
