@@ -345,6 +345,26 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     if (clicked) clicked.classList.add('selected');
   }
 
+  // Tomorrow summary card: a small card under the forecast strip with
+  // tomorrow's high, low and main condition. Pass null as the label to
+  // hide it (e.g. when tomorrow has no forecast data). Re-rendered
+  // with every forecast render, so °C/°F toggles update it too.
+  function renderTomorrowCard(label, hi, lo, condition, icon) {
+    const card = document.getElementById('tomorrowCard');
+    if (!card) return;
+    if (!label) { card.style.display = 'none'; card.innerHTML = ''; return; }
+    const cap = condition ? condition.charAt(0).toUpperCase() + condition.slice(1) : '—';
+    card.innerHTML = '';
+    const iconEl = document.createElement('span');
+    iconEl.className = 'tomorrow-icon';
+    iconEl.textContent = icon || '🌡️';
+    const textEl = document.createElement('span');
+    textEl.className = 'tomorrow-text';
+    textEl.textContent = `Tomorrow (${label}) — High ${hi}°${currentUnit}, Low ${lo}°${currentUnit}, ${cap}`;
+    card.append(iconEl, textEl);
+    card.style.display = 'flex';
+  }
+
   function renderForecast() {
     const d = forecastData;
     const offset = weatherData?.timezone || 0;
@@ -397,6 +417,21 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
 
     document.getElementById('forecastCard').style.display = 'block';
     renderHourly();
+
+    // Tomorrow's summary comes from the same daily aggregates as the
+    // strip: tomorrow in the city's timezone, min/max over its entries.
+    const tomorrowKey = formatDay(Math.floor(Date.now() / 1000) + 86400, offset);
+    const tomorrowInfo = daily[tomorrowKey];
+    if (tomorrowInfo) {
+      const tHi = convertTemp(Math.max(...tomorrowInfo.highs), currentUnit);
+      const tLo = convertTemp(Math.min(...tomorrowInfo.lows), currentUnit);
+      const tMid = Math.floor(tomorrowInfo.icons.length / 2);
+      const tIcon = (CONDITIONS[tomorrowInfo.icons[tMid]] || { icon: '🌡️' }).icon;
+      const tCond = tomorrowInfo.descs[tMid] || tomorrowInfo.descs[0];
+      renderTomorrowCard(tomorrowKey, tHi, tLo, tCond, tIcon);
+    } else {
+      renderTomorrowCard(null);
+    }
   }
 
   // Hourly forecast strip: the next hours' forecast (time, icon,
@@ -736,6 +771,7 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     const icons = ['01d','02d','10d','04d','01d'];
     const demoDescs = { '01d': 'clear sky', '02d': 'partly cloudy', '10d': 'light rain', '04d': 'overcast clouds' };
     let prevHiD = null;
+    let demoTomorrow = null;
     days.forEach((day, i) => {
       const hi = d.tempC + Math.round(Math.random() * 6 - 3);
       const lo = hi - Math.round(Math.random() * 8 + 4);
@@ -745,6 +781,7 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
       const label = i === 0 ? 'Today' : day;
       const trend = prevHiD === null ? '—' : (hiD > prevHiD ? '↑' : (hiD < prevHiD ? '↓' : '→'));
       prevHiD = hiD;
+      if (i === 1) demoTomorrow = { label: day, hi: hiD, lo: loD, cond: demoDescs[icons[i]] || d.desc, icon: ic.icon };
       const el = document.createElement('div');
       el.className = 'forecast-item' + (i === 0 ? ' today' : '');
       el.dataset.day = label;
@@ -752,6 +789,8 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
       el.addEventListener('click', () => showForecastDetail(label, hiD, loD, demoDescs[icons[i]] || d.desc));
       strip.appendChild(el);
     });
+    if (demoTomorrow) renderTomorrowCard(demoTomorrow.label, demoTomorrow.hi, demoTomorrow.lo, demoTomorrow.cond, demoTomorrow.icon);
+    else renderTomorrowCard(null);
     document.getElementById('forecastCard').style.display = 'block';
     // Demo hourly strip: next 8 slots, 3 hours apart, from the demo temperature.
     const hourlyStrip = document.getElementById('hourlyStrip');
