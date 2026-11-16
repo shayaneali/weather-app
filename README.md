@@ -30,6 +30,7 @@ https://apiweatherlive.netlify.app/
 - Click a day in the 5-day forecast strip to see that day's high, low and condition in a detail line under the strip
 - Hourly forecast strip under the current weather card: the next hours' time, icon and temperature
 - Temperature trend arrows on each forecast day (↑ rising, ↓ falling, → unchanged vs the previous day's high)
+- Tomorrow summary card under the 5-day forecast: tomorrow's high, low and main condition, updated with each render and unit toggle
 - Wind speed unit toggle: click the wind stat to switch between km/h and mph, saved in localStorage
 - Wind direction: compass label (N, NE, E, …) with a small arrow next to the wind speed that rotates to point in the wind's direction, updating with each render and unit toggle
 - Geolocation weather lookup: "Use my location" fetches weather for your current coordinates (in demo mode it falls back gracefully to the demo data)
