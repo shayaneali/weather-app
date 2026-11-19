@@ -697,6 +697,24 @@
   .fav-btn:active { transform: scale(0.96); }
   .fav-btn.active { color: #ffd76a; border-color: rgba(255, 215, 106, 0.5); }
 
+  /* Manual refresh button: same glass pill as the favourite button */
+  .refresh-btn {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    color: var(--text-light);
+    padding: 0.35rem 0.9rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    backdrop-filter: blur(10px);
+    margin-top: 0.4rem;
+    margin-left: 0.5rem;
+  }
+  .refresh-btn:hover { background: var(--glass-hover); transform: translateY(-1px); }
+  .refresh-btn:active { transform: scale(0.96); }
+
   /* Footer */
   .footer {
     text-align: center;
