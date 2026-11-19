@@ -695,6 +695,14 @@ const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your OpenWeatherMap API key
     );
   }
 
+  // Manual refresh: re-fetch the weather for the city currently on
+  // screen (or the last searched city if nothing is shown yet).
+  function refreshWeather() {
+    const shown = document.getElementById('cityName').textContent.trim();
+    const city = shown && shown !== '—' ? shown : (getLastCity() || 'Lahore');
+    fetchWeather(city);
+  }
+
   document.getElementById('searchInput').addEventListener('keydown', e => {
     if (e.key === 'Enter') searchWeather();
   });
