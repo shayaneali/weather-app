@@ -1,136 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nimbus — Weather</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Weather App</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<div class="particles" id="particles"></div>
-<div class="lightning" id="lightning"></div>
+  <h1>My Weather App</h1>
 
-<div class="container">
-  <header>
-    <div class="logo">Nimbus <span>Weather</span></div>
-  </header>
-
-  <div class="search-wrap">
-    <span class="search-icon">🔍</span>
-    <input type="text" id="searchInput" placeholder="Search city — Paris, Tokyo, Lagos…" autocomplete="off" autofocus />
-    <button class="search-btn" id="searchBtn" onclick="searchWeather()">Search</button>
+  <!-- search -->
+  <div class="search-box">
+    <input type="text" id="cityInput" placeholder="Enter city name...">
+    <button id="searchBtn">Search</button>
+    <button id="locationBtn">My location</button>
   </div>
 
-  <div class="quick-cities" id="quickCities">
-    <button class="quick-btn" onclick="useMyLocation()">📍 Use my location</button>
-    <button class="quick-btn" onclick="fetchWeather('Lahore')">Lahore</button>
-    <button class="quick-btn" onclick="fetchWeather('London')">London</button>
-    <button class="quick-btn" onclick="fetchWeather('New York')">New York</button>
-    <button class="quick-btn" onclick="fetchWeather('Tokyo')">Tokyo</button>
-    <button class="quick-btn" onclick="fetchWeather('Dubai')">Dubai</button>
-    <button class="quick-btn" onclick="fetchWeather('Sydney')">Sydney</button>
+  <!-- quick city buttons -->
+  <div class="quick-cities">
+    <button class="city-btn">Lahore</button>
+    <button class="city-btn">London</button>
+    <button class="city-btn">New York</button>
+    <button class="city-btn">Tokyo</button>
+    <button class="city-btn">Dubai</button>
+    <button class="city-btn">Sydney</button>
   </div>
 
-  <div class="recent-searches" id="recentSearches" aria-label="Recent searches"></div>
+  <!-- units -->
+  <div class="units">
+    <button id="celsiusBtn" class="active">°C</button>
+    <button id="fahrenheitBtn">°F</button>
+  </div>
 
-  <div class="favourites" id="favourites" aria-label="Favourite cities"></div>
+  <p id="message">Loading weather...</p>
 
-  <div class="error-msg" id="errorMsg">City not found. Please try a different name.</div>
-  <div class="loading-msg" id="loadingMsg" role="status">Loading weather…</div>
+  <!-- main card -->
+  <div id="weatherCard" class="card hidden">
+    <h2 id="cityName"></h2>
+    <p id="description"></p>
+    <img id="icon" src="" alt="weather icon">
+    <p id="temp" class="big-temp"></p>
+    <p id="feelsLike"></p>
 
-  <!-- Main card -->
-  <div class="weather-card" id="weatherCard">
-    <div class="city-name" id="cityName">—</div>
-    <div class="city-meta">
-      <span id="countryName">—</span>
-      <span class="dot">·</span>
-      <span id="localTime">—</span>
-    </div>
-    <div class="updated-time" id="updatedTime">—</div>
-
-    <button class="fav-btn" id="favBtn" type="button" onclick="toggleFavourite()" aria-label="Save current city as a favourite" aria-pressed="false">☆ Favourite</button>
-    <button class="refresh-btn" id="refreshBtn" type="button" onclick="refreshWeather()" aria-label="Refresh weather for the current city">↻ Refresh</button>
-
-    <div class="alert-banner" id="alertBanner" role="alert" style="display:none"></div>
-
-    <div class="unit-toggle">
-      <button class="unit-btn active" id="btnC" onclick="setUnit('C')">°C</button>
-      <button class="unit-btn" id="btnF" onclick="setUnit('F')">°F</button>
-    </div>
-
-    <button class="copy-summary-btn" id="copySummaryBtn" type="button" onclick="copyWeatherSummary()">📋 Copy summary</button>
-    <button class="share-btn" id="shareBtn" type="button" onclick="shareWeather()">🔗 Share</button>
-
-    <div class="main-row">
-      <div>
-        <div class="temperature"><span id="tempVal">—</span><span class="unit" id="unitLabel">°C</span></div>
-        <div class="feels-like">Feels like <span id="feelsVal">—</span></div>
-      </div>
-      <div class="weather-icon-wrap">
-        <div class="weather-icon" id="weatherIcon">—</div>
-        <div class="weather-desc" id="weatherDesc">—</div>
-        <div class="weather-summary" id="weatherSummary">—</div>
-      </div>
-    </div>
-
-    <div class="divider"></div>
-
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-label">💧 Humidity</div>
-        <div class="stat-value" id="humidity">—</div>
-        <div class="stat-sub" id="humidityDesc">—</div>
-      </div>
-      <div class="stat-card wind-card" id="windCard" title="Click to switch wind speed between km/h and mph" role="button" tabindex="0" aria-label="Wind speed: click to switch between km/h and mph">
-        <div class="stat-label">🌬 Wind</div>
-        <div class="stat-value"><span id="wind">—</span> <span id="windArrow" class="wind-arrow" aria-hidden="true">➤</span></div>
-        <div class="stat-sub" id="windDir">—</div>
-        <div class="stat-sub">Click to switch km/h ↔ mph</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">👁 Visibility</div>
-        <div class="stat-value" id="visibility">—</div>
-        <div class="stat-sub" id="visDesc">—</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">📊 Pressure</div>
-        <div class="stat-value" id="pressure">—</div>
-        <div class="stat-sub" id="pressDesc">—</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">🌅 Sunrise</div>
-        <div class="stat-value" id="sunrise">—</div>
-        <div class="stat-sub">local time</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">🌇 Sunset</div>
-        <div class="stat-value" id="sunset">—</div>
-        <div class="stat-sub">local time</div>
-      </div>
+    <div class="details">
+      <div class="detail-box"><p>Humidity</p><b id="humidity"></b></div>
+      <div class="detail-box"><p>Wind</p><b id="wind"></b></div>
+      <div class="detail-box"><p>Visibility</p><b id="visibility"></b></div>
+      <div class="detail-box"><p>Pressure</p><b id="pressure"></b></div>
+      <div class="detail-box"><p>Sunrise</p><b id="sunrise"></b></div>
+      <div class="detail-box"><p>Sunset</p><b id="sunset"></b></div>
     </div>
   </div>
 
-  <!-- Hourly forecast strip -->
-  <div class="hourly-card" id="hourlyCard" style="display:none">
-    <div class="forecast-label">Hourly Forecast</div>
-    <div class="hourly-strip" id="hourlyStrip"></div>
+  <!-- hourly -->
+  <div id="hourlySection" class="hidden">
+    <h3>Hourly Forecast</h3>
+    <div id="hourly" class="row"></div>
   </div>
 
-  <!-- Forecast card -->
-  <div class="forecast-card" id="forecastCard">
-    <div class="forecast-label">5-Day Forecast</div>
-    <div class="forecast-strip" id="forecastStrip"></div>
-    <div class="forecast-detail" id="forecastDetail" aria-live="polite"></div>
-    <div class="tomorrow-card" id="tomorrowCard" style="display:none" aria-live="polite"></div>
+  <!-- 5 day -->
+  <div id="dailySection" class="hidden">
+    <h3>Daily Forecast</h3>
+    <div id="daily" class="row"></div>
   </div>
 
-  <div class="footer">
-    Powered by OpenWeatherMap · Data updates every 10 min
-  </div>
-</div>
+  <p class="footer">Data from WeatherAPI.com</p>
 
-<script src="js/script.js"></script>
+  <script src="js/script.js"></script>
 </body>
 </html>
