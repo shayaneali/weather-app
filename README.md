@@ -1,44 +1,28 @@
-# Weather App — Nimbus Weather
+# My Weather App
 
-A real-time weather web application that fetches and displays live weather data for any city, including temperature, humidity, wind, visibility, pressure, sunrise and sunset.
+A simple real-time weather app that shows live weather for any city, using real data from WeatherAPI.com — no demo or fake data.
 
 ## Live Demo
 https://apiweatherlive.netlify.app/
 
-## Screenshot
-![weather-app screenshot](https://image.thum.io/get/width/1200/https://apiweatherlive.netlify.app/)
-
 ## Tech Stack
 - HTML5
 - CSS3
-- JavaScript (ES6+)
-- OpenWeather REST API
-- Google Fonts
+- JavaScript
+- WeatherAPI.com (real-time weather API)
 
 ## Features
-- Live weather search by city, with a loading indicator while data is fetched; press Enter to search, and the search input is focused on page load
-- Press "/" anywhere on the page to focus the city search box
-- Current conditions, humidity, wind, visibility and pressure
-- One-line weather summary under the description (condition, feels-like temperature and humidity), updated with every render
-- Copy weather summary button on the weather card: copies a one-line summary (city, condition, feels-like temperature and humidity) to the clipboard, with brief "Copied" feedback
-- Share weather button on the weather card: shares the current city's summary via the Web Share API when available, otherwise copies the summary text to the clipboard with brief "Copied" feedback
-- Sunrise / sunset times
-- Responsive, glassmorphism UI
-- Recent searches: the last 5 searched cities, saved locally and shown as clickable chips that re-run the search, with a small Clear button that empties the stored list and hides the chips
-- Favourite cities: star button on the weather card saves the current city to a favourites list (saved in localStorage), shown as quick-access chips next to recent searches; clicking a chip loads that city, and each chip has a remove (✕) button
-- Extreme weather alert banner: shown on the weather card only for extreme conditions (heat 40°+, thunderstorms, heavy snow)
-- Click a day in the 5-day forecast strip to see that day's high, low and condition in a detail line under the strip
-- Hourly forecast strip under the current weather card: the next hours' time, icon and temperature
-- Temperature trend arrows on each forecast day (↑ rising, ↓ falling, → unchanged vs the previous day's high)
-- Tomorrow summary card under the 5-day forecast: tomorrow's high, low and main condition, updated with each render and unit toggle
-- Wind speed unit toggle: click the wind stat to switch between km/h and mph, saved in localStorage
-- Wind direction: compass label (N, NE, E, …) with a small arrow next to the wind speed that rotates to point in the wind's direction, updating with each render and unit toggle
-- Geolocation weather lookup: "Use my location" fetches weather for your current coordinates (in demo mode it falls back gracefully to the demo data)
-- Last updated time shown on the weather card, refreshed on each successful search
-- Last viewed city: the last successfully loaded city is saved locally and reloaded automatically when the page opens (Lahore on first visit)
+- Search weather by city name, or press Enter to search
+- Quick city buttons: Lahore, London, New York, Tokyo, Dubai, Sydney
+- "My location" button: weather for your current coordinates
+- °C / °F toggle
+- Current temperature, feels-like, condition and icon
+- Humidity, wind, visibility, pressure, sunrise and sunset
+- Hourly forecast: the next 8 hours
+- Daily forecast: 7 days on the trial plan, automatically falls back to 3 days on the free plan
 
 ## Run Locally
 Open `index.html` in a browser, or serve with any static server (e.g. VS Code Live Server).
 
 ## Note on API Key
-This demo uses a free OpenWeather API key embedded in the front-end code for demonstration purposes only. For production use, keys should be kept server-side and rotated regularly.
+This demo uses Shayan's free WeatherAPI.com key embedded in the front-end code (`js/script.js`) for demonstration purposes only. Free plan: 100,000 calls/month, 3-day forecast after the Business trial ends on 2 Dec 2026.
