@@ -2,7 +2,10 @@
 var API_KEY = "2f14e2cef74c4eedb69230948262511";
 
 var unit = "metric"; // metric = Celsius, imperial = Fahrenheit
+var pressureUnit = "hPa"; // hPa or inHg (pressure toggle, independent of temp units)
 var currentCity = "Lahore";
+var lastPressureMb = null; // last shown pressure, so the toggle re-renders without a refetch
+var lastPressureIn = null;
 
 // get elements from the page
 var cityInput = document.getElementById("cityInput");
@@ -10,6 +13,8 @@ var searchBtn = document.getElementById("searchBtn");
 var locationBtn = document.getElementById("locationBtn");
 var celsiusBtn = document.getElementById("celsiusBtn");
 var fahrenheitBtn = document.getElementById("fahrenheitBtn");
+var pressureHpaBtn = document.getElementById("pressureHpaBtn");
+var pressureInHgBtn = document.getElementById("pressureInHgBtn");
 var message = document.getElementById("message");
 var weatherCard = document.getElementById("weatherCard");
 var hourlySection = document.getElementById("hourlySection");
@@ -38,6 +43,15 @@ function formatHour(timeString) {
   hours = hours % 12;
   if (hours === 0) hours = 12;
   return hours + ":00 " + ampm;
+}
+
+// show the stored pressure in the selected unit
+function renderPressure() {
+  if (lastPressureMb === null) return; // nothing loaded yet
+  document.getElementById("pressure").textContent =
+    pressureUnit === "hPa"
+      ? lastPressureMb + " hPa"
+      : lastPressureIn.toFixed(2) + " inHg";
 }
 
 function showMessage(text) {
@@ -142,7 +156,9 @@ function showCurrentWeather(data, forecast) {
     document.getElementById("visibility").textContent = cur.vis_miles + " mi";
   }
 
-  document.getElementById("pressure").textContent = cur.pressure_mb + " hPa";
+  lastPressureMb = cur.pressure_mb;
+  lastPressureIn = cur.pressure_in;
+  renderPressure();
   document.getElementById("sunrise").textContent = astro.sunrise;
   document.getElementById("sunset").textContent = astro.sunset;
 
@@ -261,6 +277,21 @@ fahrenheitBtn.addEventListener("click", function () {
   fahrenheitBtn.classList.add("active");
   celsiusBtn.classList.remove("active");
   getWeather(currentCity);
+});
+
+// pressure unit buttons (hPa / inHg) — re-render the stored value, no refetch
+pressureHpaBtn.addEventListener("click", function () {
+  pressureUnit = "hPa";
+  pressureHpaBtn.classList.add("active");
+  pressureInHgBtn.classList.remove("active");
+  renderPressure();
+});
+
+pressureInHgBtn.addEventListener("click", function () {
+  pressureUnit = "inHg";
+  pressureInHgBtn.classList.add("active");
+  pressureHpaBtn.classList.remove("active");
+  renderPressure();
 });
 
 // load default city when page opens
