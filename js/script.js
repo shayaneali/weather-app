@@ -159,6 +159,8 @@ function showCurrentWeather(data, forecast) {
   lastPressureMb = cur.pressure_mb;
   lastPressureIn = cur.pressure_in;
   renderPressure();
+  // Dew point follows the selected temperature unit (°C / °F).
+  document.getElementById("dewPoint").textContent = pickTemp(cur.dewpoint_c, cur.dewpoint_f);
   document.getElementById("sunrise").textContent = astro.sunrise;
   document.getElementById("sunset").textContent = astro.sunset;
 
